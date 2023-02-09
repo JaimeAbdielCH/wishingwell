@@ -1,0 +1,208 @@
+<div class="row" *ngIf="evento$ | async as evento" style="justify-content: center; align-items: center; max-width: 840px;padding-top: 5vh;margin-right: auto;
+margin-left: auto;">
+  <div class="col">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Datos de evento</h1>
+    <div class="groupContainer">
+      <h2>Cabecera</h2>
+      <!--Titulo del evento-->
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Título del Evento</mat-label>
+        <input matInput type="text" [(ngModel)]="nombreEvento" name="nombre" required="true"
+          (change)="textChanged('nombre')">
+        <mat-hint>Titulo que aparecera en la cabecera del evento. max: 50</mat-hint>
+      </mat-form-field>
+      <!--Fechae del evento-->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Seleccione una fecha</mat-label>
+        <input matInput [matDatepicker]="datepicker" [formControl]="fechaPicker" name="fechaEvento" (dateChange)="textChanged('fecha')">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+        <mat-datepicker #datepicker>
+          <mat-datepicker-actions>
+            <button mat-button matDatepickerCancel>Cancelar</button>
+            <button mat-raised-button color="primary" matDatepickerApply>Ok</button>
+          </mat-datepicker-actions>
+        </mat-datepicker>
+      </mat-form-field>
+      <!--Hora del evento-->
+      <mat-form-field appearance="fill">
+        <mat-label>Hora</mat-label>
+        <input type="time" matInput [(ngModel)]="eventoHora" name="hour" min="00:00" max="23:00" (change)="textChanged('hora')">
+     </mat-form-field>
+      <!--Imagen de fondo del titulo-->
+      <mat-card class="card-image-chooser">
+        <img mat-card-image src="{{evento.imagenHeader ?? 'https://via.placeholder.com/700x300?text=Sin Imagen'}}"
+          alt="Photo of a Shiba Inu">
+        <mat-card-content>
+        </mat-card-content>
+        <mat-card-actions>
+          <mat-form-field class="full-width" appearance="fill">
+            <div>
+              <mat-toolbar>
+                <input matInput [value]="'Fondo de título'" />
+              </mat-toolbar>
+              <input type="file" id="fileheaderImageInput" name="headerImage" accept="image/*"
+                (change)="onImageHeaderChanged($event)" />
+            </div>
+          </mat-form-field>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div class="groupContainer">
+      <h2>Información del Evento</h2>
+      <!--Titulo de la descripción-->
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Título de la descripción</mat-label>
+        <input matInput type="text" [(ngModel)]="tituloEvento" name="tituloDescripcion" required="true"
+          (change)="textChanged('tituloEvento')">
+        <mat-hint>Titulo que aparecera en la descripción del evento. max: 25</mat-hint>
+      </mat-form-field>
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput [(ngModel)]="descripcionEvento" style="width: 100% !important; height: 10vh;" (change)="textChanged('descripcionEvento')"></textarea>
+      </mat-form-field>
+      <!--Lista de Invitados-->
+    <h2>Lista de Invitados</h2>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Email de invitados</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Invitation List">
+        <mat-chip-row *ngFor="let invitado of evento.invitados" (removed)="remove(invitado)"
+                  [aria-description]="'presione enter para editar ' + invitado">
+          {{invitado}}
+          <button 
+            matChipRemove 
+            [attr.aria-label]="'remove ' + invitado">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+        <input placeholder="Nuevo invitado..." 
+          [matChipInputFor]="chipGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+          [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="add($event)">
+      </mat-chip-grid>
+    </mat-form-field>
+    <!--Información de Pago-->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Información de Pago</mat-label>
+      <textarea matInput [(ngModel)]="informacionPago" style="width: 100% !important; height: 10vh;" (change)="textChanged('informacionPago')"></textarea>
+    </mat-form-field>
+    <!--Mapa de la locación-->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Lugar del Evento</mat-label>
+      <div id="map" class="mapContainer"></div>
+      <input matInput style="display: none;" />
+      <mat-hint>lugar del evento, actual: {{latlng}}</mat-hint>
+    </mat-form-field>
+    </div>
+    <hr />
+    <!--FOTOS-->
+    <h2>Imagenes del Evento</h2>
+    <div style="display: none">
+      <input #eventPics type="file" id="fileInput" name="fileInput" accept="image/*" multiple
+        (change)="selectFiles($event)" />
+    </div>
+    <div>
+      <img *ngFor='let preview of previews' [src]="preview" class="preview">
+    </div>
+    <div *ngFor="let progressInfo of progressInfos">
+      <div *ngIf="progressInfo">
+        <span>{{ progressInfo.fileName }}</span>
+        <mat-toolbar class="progress-bar">
+          <mat-progress-bar color="accent" [value]="progressInfo.value"></mat-progress-bar>
+          <span class="progress" style="line-height: 1rem;">{{ progressInfo.value }}%</span>
+        </mat-toolbar>
+      </div>
+    </div>
+    <mat-card class="list-card" *ngIf="imagenesEventos?.length;else emptyEventPics">
+      <mat-card-content>
+        <mat-list role="list">
+          <mat-list-item role="listitem" *ngFor="let image of imagenesEventos" class="list-item mat-list-object">
+            <p matLine><a href="{{ image.url }}">{{ image.name }}</a></p>
+            <img src="{{ image.url }}" alt="{{ image.name }}" height="50px" />
+            <button mat-icon-button matTooltip="Basic" (click)="deleteImage(image)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+    <ng-template #emptyEventPics>
+      <div style="margin-top: 5vh; margin-bottom: 5vh;">
+        <mat-card>
+          <mat-card-content>
+            <p>No hay fotos</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </ng-template>
+    <button mat-flat-button color="primary" (click)="eventPics.click()" style="margin-bottom: 2vh;margin-top:2vh;">
+      Subir
+    </button>
+    <!--Foto de portada-->
+    <mat-card class="card-image-chooser">
+      <img mat-card-image src="{{evento.imagenPortada ?? 'https://via.placeholder.com/700x300?text=Sin Imagen'}}"
+        alt="Photo of a Shiba Inu">
+      <mat-card-content>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-form-field class="full-width" appearance="fill">
+          <div>
+            <mat-toolbar>
+              <input matInput [value]="'Imagen de Portada'" />
+            </mat-toolbar>
+            <input type="file" id="fileheaderImageInput" name="headerImage" accept="image/*"
+              (change)="onImagePortadaChanged($event)" />
+          </div>
+        </mat-form-field>
+      </mat-card-actions>
+    </mat-card>
+    
+    <div class="regalosContainer">
+      <h3>Regalos</h3>
+      <button mat-mini-fab color="primary" (click)="addRegalo(evento)">
+        <mat-icon>add</mat-icon>
+      </button>
+      <small style="margin-left: .4vh">Agregar Regalo</small>
+      <table mat-table [dataSource]="regalos" style="margin-top: .8vh; width: 100%;">
+
+        <ng-container matColumnDef="imgThumb">
+          <th mat-header-cell *matHeaderCellDef style="width: 25%;"></th>
+          <td mat-cell *matCellDef="let element"><img src="{{element.imagenUrl[0].url}}" width="80%" /> </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let element">{{element.nombre}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="precio">
+          <th mat-header-cell *matHeaderCellDef>Precio</th>
+          <td mat-cell *matCellDef="let element">{{element.precio}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef style="width: 10%;">Estado</th>
+          <td mat-cell *matCellDef="let element">{{element.estado}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="opciones">
+          <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Opciones </th>
+          <td mat-cell *matCellDef="let element" style="text-align: center;">
+            <button mat-icon-button (click)="editRegalo(element, evento)" [disabled]="element.estado == 'PAGADO'">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="regalosColumns"></tr>
+        <tr mat-row *matRowDef="let myRowData; columns: regalosColumns"></tr>
+
+      </table>
+    </div>
+    <button type="button" mat-raised-button color="primary" (click)="update(evento)">Salvar</button>
+  </div>
+</div>

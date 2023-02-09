@@ -1,0 +1,38 @@
+.app-toolbar {
+    position: fixed;
+    position: -webkit-fixed; /* For macOS/iOS Safari */
+    bottom: 0; /* Sets the sticky toolbar to be on bottom */
+    left: 0;
+    z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+    background-color: var(--primary-100);
+}
+
+.topBarColor {
+    height: 24px;
+    top: -10px;
+    position: relative;
+    background-color: #EBF000;
+}
+
+.img-thumbnail-profile {
+    padding: .25rem;
+    background-color: #938181;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 62%;
+    width: 42%;
+}
+
+.pictureHolder {
+    padding-top: 1vh;
+    padding-left: 2vw;
+    padding-bottom: 1vh;
+}
+
+.separator {
+    height: 20px;
+}
+
+.exit-btn {
+    color: var(--primary-dark);
+    font-weight: bold;
+}

@@ -1,0 +1,89 @@
+<div class="headerContainer">
+    <img class="imageHeader" src="{{Event?.imagenHeader}}" alt="Imagen de header" />
+    <h2 class="headerTitle">{{Event?.nombre}}</h2>
+</div>
+<div class="row justify-content-center mt-3">
+    <div class="col-12">
+        <h2>Cuenta regresiva al Evento</h2>
+        <div style="display: flex;
+          justify-content: center;">
+            <style>
+                .tableCountRevers td {
+                    padding-inline: 6px;
+                    text-align: center;
+                }
+            </style>
+            <table class="tableCountRevers" *ngIf="eventDate">
+                <tr>
+                    <td><mat-chip-listbox
+                            aria-label="Fish selection"><mat-chip>{{conteoRegresivo.dia}}</mat-chip></mat-chip-listbox>
+                    </td>
+                    <td>:</td>
+                    <td><mat-chip-listbox
+                            aria-label="Fish selection"><mat-chip>{{conteoRegresivo.hrs}}</mat-chip></mat-chip-listbox>
+                    </td>
+                    <td>:</td>
+                    <td><mat-chip-listbox
+                            aria-label="Fish selection"><mat-chip>{{conteoRegresivo.min}}</mat-chip></mat-chip-listbox>
+                    </td>
+                    <td>:</td>
+                    <td><mat-chip-listbox
+                            aria-label="Fish selection"><mat-chip>{{conteoRegresivo.seg}}</mat-chip></mat-chip-listbox>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>día</td>
+                    <td></td>
+                    <td>hrs</td>
+                    <td></td>
+                    <td>min</td>
+                    <td></td>
+                    <td>seg</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="eventInfoContainer">
+    <div>
+        <h2>{{Event?.tituloDescripcion}}</h2>
+        <p>{{Event?.descripcion}}</p>
+    </div>
+    <div class="imageSwiperContainer">
+        <h2 class="imageGallerTitulo">Fotos</h2>
+        <div class="swiper"  *ngIf="Event?.imagenesEventos">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" swiperSlide *ngFor="let img of Event?.imagenesEventos">
+                    <img src="{{img.url}}" alt="{{img.name}}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="imageSwiperContainer" *ngIf="Event?.regalos let regalos">
+        <h2 class="imageGallerTitulo">Regalos</h2>
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" swiperSlide *ngFor="let img of regalos">
+                    <div *ngIf="img.imagenUrl let images">
+                        <img src="{{images[0].url}}" alt="{{images[0].name}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top: 2vh;">
+        <!--Mapa de la locación-->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Lugar del Evento</mat-label>
+            <div id="map" class="mapContainer"></div>
+            <input matInput style="display: none;" />
+            <mat-hint>lugar del evento, actual: {{latlng}}</mat-hint>
+        </mat-form-field>
+    </div>
+    <div style="margin-top: 2vh">
+        <button mat-flat-button color="primary" style="margin-right: 2vw;"
+            *ngIf="owner_iden != Event?.ownerId">Asistir</button>
+        <button mat-flat-button color="accent" *ngIf="owner_iden == Event?.ownerId">Editar</button>
+    </div>
+</div>

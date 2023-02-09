@@ -1,0 +1,26 @@
+.pictureContainer {
+    border-radius: 50%;
+      width: 50%;
+      padding-bottom: 50%;
+      padding-left: auto;
+      background: rgb(42, 37, 61);
+      position:relative;
+      overflow:hidden;
+      z-index:2;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 7vh;
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 4vh;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }

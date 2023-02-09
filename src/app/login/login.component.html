@@ -1,0 +1,42 @@
+<div class="row" style="justify-content: center; align-items: center;height: 100vh; width: 100vw;">
+    <div class="col-6 d-flex justify-content-center">
+    <div class="col align-self-center" style="text-align: center; max-width: 400px">
+        <h2 style="font-family: Dancing Script; font-size: 53px; margin-bottom: 28px">Wishing Well</h2>
+        <p>Presente toda su información del evento en un solo lugar, fotos, lista de regalos, confirmación de invitados</p>
+        <!--<form>
+            <mat-form-field appearance="fill" style="width: 100%;">
+                <mat-label>Username:</mat-label>
+                <input matInput placeholder="type your username" type="text" name="username" [(ngModel)]="userForm.username">
+            </mat-form-field>
+            <mat-form-field appearance="fill" style="width: 100%;">
+                <mat-label>Password:</mat-label>
+                <input matInput placeholder="type your password" type="password" name="password" [(ngModel)]="userForm.password">
+            </mat-form-field>
+            <button mat-stroked-button color="primary">Login</button>
+        </form>-->
+        <hr />
+        <button type="button" (click)="loginWithGoogle()" mat-raised-button color="primary" class="btn btn-login">
+            <mat-icon svgIcon="googleicon" aria-hidden="false" style="width: 12px; height: 27px; vertical-align: initial;line-height: 1.125rem;"></mat-icon> Login with Google
+        </button>
+        <button (click)="loginWithFacebook()" mat-raised-button color="primary" class="btn btn-login">
+            <mat-icon svgIcon="facebookicon" aria-hidden="false" style="width: 12px; height: 27px; vertical-align: initial;line-height: 1.125rem;"></mat-icon> Login with Facebook
+        </button>
+    </div>
+</div>
+    <div class="d-none d-md-flex col-6" style="height: 100vh; overflow: hidden; padding: 0px">
+      <div class="swiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide carousel-item">
+              <img src="{{imagesURLS[0]}}" alt="slide_images">
+            </div>
+            <div class="swiper-slide carousel-item">
+              <img src="{{imagesURLS[1]}}" alt="slide_images">
+            </div>
+            <div class="swiper-slide carousel-item">
+              <img src="{{imagesURLS[2]}}" alt="slide_images">
+            </div>
+        </div>
+      </div>
+          
+    </div>
+</div>

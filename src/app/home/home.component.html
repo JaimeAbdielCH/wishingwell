@@ -1,0 +1,43 @@
+<style>
+.eventos-card {
+    margin-top: 1vh;
+}
+
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+.example-button-container {
+  display: flex;
+  justify-content: center;
+  width: 120px;
+  position: fixed;
+    bottom: 4vh;
+    right: 0vw;
+    z-index: 10000;
+}
+</style>
+<div class="row justify-content-center">
+<h1>Eventos</h1>
+<div class="col-md-12 col-lg-5" *ngIf="eventos$ | async; let eventos;">
+    <div *ngIf="eventos.length > 0;else noevent">
+      <mat-card class="eventos-card" *ngFor="let evento of eventos">
+          <img mat-card-image src="{{evento.imagenPortada}}" alt="evento-boda">
+          <mat-card-actions class="actionholder">
+            <button mat-button (click)="seeEventId(evento.id)">{{evento.nombre}}</button>
+            <button mat-button><mat-icon>favorite</mat-icon></button>
+          </mat-card-actions>
+      </mat-card>
+    </div>
+    <ng-template #noevent>
+      <div>
+        <h2 style="color:rgb(83, 114, 114)">Presione el signo de más para crear un evento</h2>
+      </div>
+    </ng-template>
+</div>  
+</div>
+<div class="example-button-container">
+    <button mat-fab style="background-color: var(--secondary-light);" (click)="nuevoEvento()">
+      <mat-icon>add</mat-icon>
+    </button>
+</div>

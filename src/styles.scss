@@ -1,1 +1,197 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@import "./assets/style/theme.scss";
+
+$dark-primary-text: rgba(black, 0.87);
+$light-primary-text: white;
+
+@include mat.core();
+$whishingwell-palette: (
+ 50: #51d7ee,
+ 100: #25bbd1,
+ 200: #009fb3,
+ 300: #008394,
+ 400:#006876,
+ 500: #005b67,
+ 600:#004e59,
+ 700:#00424b,
+ 800:#00363e,
+ 900: #001f24,
+ A100: #add1ff,
+  A200: #7ab5ff,
+  A400: #4798ff,
+  A700: #2e8aff,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $light-primary-text
+  )
+);
+$accent-palette: (
+    50: #cde7ed,
+ 100: #b1cbd1,
+ 200: #96b0b5,
+ 300: #7c959a,
+ 400:#637b80,
+ 500: #4a6267,
+ 600:#3e565b,
+ 700:#334b4f,
+ 800:#273f44,
+ 900: #1c3439,
+ A100: #add1ff,
+  A200: #7ab5ff,
+  A400: #4798ff,
+  A700: #2e8aff,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $light-primary-text
+  )
+);
+
+$warn-palette: (
+    50: #ffb4ab,
+    100: #ff897d,
+    200: #ff5449,
+    300: #de3730,
+    400:#ba1a1a,
+    500: #a80710,
+    600:#93000a,
+    700:#7e0007,
+    800:#690005,
+    900: #410002,
+    A100: #add1ff,
+  A200: #7ab5ff,
+  A400: #4798ff,
+  A700: #2e8aff,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $light-primary-text
+  )
+);
+$my-primary: mat.define-palette($whishingwell-palette, 500);
+$my-accent: mat.define-palette($accent-palette, 500);
+$my-warn: mat.define-palette($warn-palette, 500);
+
+$my-theme: mat.define-light-theme((
+ color: (
+   primary: $my-primary,
+   accent: $my-accent,
+   warn: $my-warn
+ ),
+ density: 0,
+));
+
+@include mat.all-component-themes($my-theme);
+
+@font-face {
+    font-family: "Dancing Script";
+    src: url(./assets/fonts/Dancing_Script/DancingScript-VariableFont_wght.ttf);
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+h6 {
+  font-size: 20px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.col-container {
+  padding-top: 1vh;
+  padding-bottom: 8vh;
+}
+.firebase-emulator-warning {
+    // hide the warning banner as AngularFire doesn't support the 'disableWarnings' option
+    display: none;
+}
+
+h1 {
+  text-align: center;
+  font-size: 110px !important;
+  line-height: 96px !important;
+}
+
+h2 {
+  text-align: center;
+  font-size: 45px;
+  line-height: 45px;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  background-color: var(--primary-input-bg);
+}
+
+.groupContainer {
+  padding: 1.7vw;
+  margin-bottom: 12px;
+  border-radius: 16px;
+}
+
+.groupContainer h2 {
+  color: white;
+}
+
+textarea.mat-input-element {
+  resize: both !important;
+  width: 200px !important;
+}
+
+.preview {
+  max-width: 200px;
+  margin-bottom: .3vh;
+  vertical-align: middle;
+}
+
+.card-image-chooser {
+  margin-bottom: 3vh;
+}
+
+.mapContainer {
+  width: 100%;
+  height: 30vh;
+  margin-top: 1.5vh;
+}
+
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 100px !important;
+  }
+}
+
+.container {
+  max-width: max-content !important;
+}
