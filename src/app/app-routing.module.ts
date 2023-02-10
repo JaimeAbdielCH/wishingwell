@@ -5,13 +5,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { EventosComponent } from './eventos/eventos.component';
 import { RegalosComponent } from './regalos/regalos.component';
 
-import { AngularFireAuthGuard } from '@angular/fire/compat/auth-guard';
+
 import { EditarEventoComponent } from './editar-evento/editar-evento.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { HomeComponent } from './home/home.component';
 import { UserInfoComponent } from './user-info/user-info.component';
 import { EventDetailComponent } from './event-detail/event-detail.component';
 
+import { AuthGuard } from '@angular/fire/auth-guard'
 
 //##angular material
 import {MatCardModule} from '@angular/material/card';
@@ -29,14 +30,13 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import { enableMultiTabIndexedDbPersistence } from '@angular/fire/firestore';
 
-const routes: Routes = [ { path: '', component: HomeComponent, pathMatch: 'full', canActivate: [AngularFireAuthGuard] },
-{path: 'user-info', component: UserInfoComponent, pathMatch: 'full', canActivate: [AngularFireAuthGuard]},
-{ path: 'eventos', component: EventosComponent, pathMatch: 'full', canActivate: [AngularFireAuthGuard] },
-{ path: 'evento/:id', component: EditarEventoComponent, canActivate: [AngularFireAuthGuard] },
-{ path: 'evento-detail/:id', component: EventDetailComponent, canActivate: [AngularFireAuthGuard] },
-{ path: 'regalos', component: RegalosComponent, canActivate: [AngularFireAuthGuard] },
+const routes: Routes = [ { path: '', component: HomeComponent, pathMatch: 'full', canActivate: [AuthGuard] },
+{path: 'user-info', component: UserInfoComponent, pathMatch: 'full', canActivate: [AuthGuard]},
+{ path: 'eventos', component: EventosComponent, pathMatch: 'full', canActivate: [AuthGuard] },
+{ path: 'evento/:id', component: EditarEventoComponent, canActivate: [AuthGuard] },
+{ path: 'evento-detail/:id', component: EventDetailComponent, canActivate: [AuthGuard] },
+{ path: 'regalos', component: RegalosComponent, canActivate: [AuthGuard] },
 { path: '**', component: PageNotFoundComponent }];
 
 @NgModule({

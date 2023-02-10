@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
     register();
     this.swiper = new Swiper('.swiper', {
             modules: [Autoplay],
-            speed: 4000,
+            speed: 2000,
             spaceBetween: 4,
             navigation: false,
             autoplay: {

@@ -19,7 +19,7 @@
 </style>
 <div class="row justify-content-center">
 <h1>Eventos</h1>
-<div class="col-md-12 col-lg-5" *ngIf="eventos$ | async; let eventos;">
+<div class="col-md-12 col-lg-5" *ngIf="eventos">
     <div *ngIf="eventos.length > 0;else noevent">
       <mat-card class="eventos-card" *ngFor="let evento of eventos">
           <img mat-card-image src="{{evento.imagenPortada}}" alt="evento-boda">

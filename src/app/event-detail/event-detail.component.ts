@@ -1,8 +1,7 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef, Component, NgModule, OnDestroy, OnInit, Optional, Type, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Optional, Type, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { doc, onSnapshot, Firestore } from "firebase/firestore";
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Subscription, interval } from 'rxjs';
 import { Evento } from '../interfaces/evento.interface';
 
@@ -49,7 +48,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private firestore: Firestore,
     private cdr: ChangeDetectorRef,
-    @Optional() private auth: Auth,
+    private auth: Auth
   ) {
     this.event_iden = this.route.snapshot.paramMap.get('id')!;
     const getEvent = doc(firestore, 'eventos/' + this.event_iden);
@@ -91,12 +90,16 @@ export class EventDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.conteo$.unsubscribe();
-    this.unsub = null;
+    this.unsub();
   }
 
-  async ngOnInit(): Promise<void> {
-    const currUser  = await this.auth.currentUser;
-    this.owner_iden = currUser?.uid;
+  async ngOnInit() {
+
+
+      const user = await this.auth.currentUser;
+      this.owner_iden = user?.uid;
+
+    
 
     this.swiper = new Swiper('.swiper', {
       modules: [Autoplay],

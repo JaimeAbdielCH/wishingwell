@@ -44,7 +44,7 @@ export class EventosComponent implements OnInit {
 
   nuevoEvento = async () => {
     const today = new Date();
-    const id = doc<Evento>(this.misEventos as CollectionReference<Evento>, 'evento');
+    const id = doc(this.firestore, 'evento');
     const nuevoEvento: Evento = {
       id: id.id,
       ownerId: this.user.uid,
@@ -57,7 +57,7 @@ export class EventosComponent implements OnInit {
       invitados: [],
       regalos: []
     }
-    setDoc<Evento>(id, nuevoEvento).then(() => {
+    setDoc(id, nuevoEvento).then(() => {
       this.route.navigateByUrl('evento/'+id.id);
     });
     

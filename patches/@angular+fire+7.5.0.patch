@@ -1,0 +1,50 @@
+diff --git a/node_modules/@angular/fire/compat/auth-guard/auth-guard.d.ts b/node_modules/@angular/fire/compat/auth-guard/auth-guard.d.ts
+index c3f52db..301354c 100644
+--- a/node_modules/@angular/fire/compat/auth-guard/auth-guard.d.ts
++++ b/node_modules/@angular/fire/compat/auth-guard/auth-guard.d.ts
+@@ -3,13 +3,14 @@ import { Observable, UnaryFunction } from 'rxjs';
+ import firebase from 'firebase/compat/app';
+ import { AngularFireAuth } from '@angular/fire/compat/auth';
+ import * as i0 from "@angular/core";
++import { Auth } from '@angular/fire/auth';
+ export declare type AuthPipeGenerator = (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) => AuthPipe;
+ export declare type AuthPipe = UnaryFunction<Observable<firebase.User | null>, Observable<boolean | string | any[]>>;
+ export declare const loggedIn: AuthPipe;
+ export declare class AngularFireAuthGuard implements CanActivate {
+     private router;
+     private auth;
+-    constructor(router: Router, auth: AngularFireAuth);
++    constructor(router: Router, auth: Auth);
+     canActivate: (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) => Observable<boolean | import("@angular/router").UrlTree>;
+     static ɵfac: i0.ɵɵFactoryDeclaration<AngularFireAuthGuard, never>;
+     static ɵprov: i0.ɵɵInjectableDeclaration<AngularFireAuthGuard>;
+diff --git a/node_modules/@angular/fire/compat/firestore/interfaces.d.ts b/node_modules/@angular/fire/compat/firestore/interfaces.d.ts
+index e7ce5e6..7a630cf 100644
+--- a/node_modules/@angular/fire/compat/firestore/interfaces.d.ts
++++ b/node_modules/@angular/fire/compat/firestore/interfaces.d.ts
+@@ -10,7 +10,7 @@ export declare type FieldPath = firebase.firestore.FieldPath;
+ export declare type Query<T = DocumentData> = firebase.firestore.Query<T>;
+ export declare type SetOptions = firebase.firestore.SetOptions;
+ export declare type DocumentData = firebase.firestore.DocumentData;
+-export interface DocumentSnapshotExists<T> extends firebase.firestore.DocumentSnapshot {
++export interface DocumentSnapshotExists<T> extends firebase.firestore.DocumentSnapshot<T> {
+     readonly exists: true;
+     data(options?: SnapshotOptions): T;
+ }
+@@ -20,13 +20,13 @@ export interface DocumentSnapshotDoesNotExist extends firebase.firestore.Documen
+     get(fieldPath: string | FieldPath, options?: SnapshotOptions): undefined;
+ }
+ export declare type DocumentSnapshot<T> = DocumentSnapshotExists<T> | DocumentSnapshotDoesNotExist;
+-export interface QueryDocumentSnapshot<T> extends firebase.firestore.QueryDocumentSnapshot {
++export interface QueryDocumentSnapshot<T> extends firebase.firestore.QueryDocumentSnapshot<T> {
+     data(options?: SnapshotOptions): T;
+ }
+-export interface QuerySnapshot<T> extends firebase.firestore.QuerySnapshot {
++export interface QuerySnapshot<T> extends firebase.firestore.QuerySnapshot<T> {
+     readonly docs: QueryDocumentSnapshot<T>[];
+ }
+-export interface DocumentChange<T> extends firebase.firestore.DocumentChange {
++export interface DocumentChange<T> extends firebase.firestore.DocumentChange<T> {
+     readonly doc: QueryDocumentSnapshot<T>;
+ }
+ export interface DocumentChangeAction<T> {

@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { from, Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-import { TransferState } from '@angular/platform-browser';
 import { traceUntilFirst } from '@angular/fire/performance';
 import { getDownloadURL, getStorage, ref, Storage } from '@angular/fire/storage';
 import { keepUnstableUntilFirst } from '@angular/fire';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
+import { Auth, signOut } from '@angular/fire/auth';
 
 const TRANSPARENT_PNG
   = 'https://via.placeholder.com/150';
@@ -19,8 +18,7 @@ const TRANSPARENT_PNG
 export class BottomTabComponent implements OnInit {
   public readonly taylorHill$: Observable<string>;
 
-  constructor(public auth: AngularFireAuth,
-    public router: Router) {
+  constructor(public auth: Auth, public router: Router) {
     const storage = getStorage(); 
     const icon = ref(storage, 'taylorhill.png');
     this.taylorHill$ = from(getDownloadURL(icon)).pipe(
@@ -34,7 +32,7 @@ export class BottomTabComponent implements OnInit {
   }
 
   logOut(){
-    this.auth.signOut();
+    signOut(this.auth);
   }
 
   goToEventos(){

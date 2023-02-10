@@ -8,6 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "fireEmulator": "firebase emulators:start --import .firebase --export-on-exit",
+    "stopall": "lsof -t -i:5003 -i:5002 -i:5000 -i:9199 -i:4400 | xargs kill -9",
     "deployApp": "firebase deploy --only hosting"
   },
   "private": true,
@@ -24,6 +25,7 @@
     "@angular/router": "^15.1.0",
     "@googlemaps/js-api-loader": "^1.15.1",
     "bootstrap": "^5.2.3",
+    "patch-package": "^6.5.1",
     "rxjs": "~7.8.0",
     "swiper": "^9.0.2",
     "tslib": "^2.3.0",

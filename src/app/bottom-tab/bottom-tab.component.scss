@@ -4,7 +4,6 @@
     bottom: 0; /* Sets the sticky toolbar to be on bottom */
     left: 0;
     z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
-    background-color: var(--primary-100);
 }
 
 .topBarColor {
