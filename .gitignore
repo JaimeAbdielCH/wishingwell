@@ -43,3 +43,5 @@ Thumbs.db
 
 /.firebase
 firebase-export-1676131143885TiqNcm/*
+firebase-debug.log
+firestore-debug.log
