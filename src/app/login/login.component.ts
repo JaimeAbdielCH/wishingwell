@@ -1,13 +1,14 @@
-import { Component, ElementRef, OnInit, Optional } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, Optional, PLATFORM_ID } from '@angular/core';
 import firebase from 'firebase/compat/app';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MatIconRegistry} from '@angular/material/icon';
 import { Router } from '@angular/router';
 //## swipper
-import { Auth, authState, signInAnonymously, signOut, User, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider } from '@angular/fire/auth';
 import Swiper, { Autoplay } from 'swiper';
 //##swiper
 import { register } from 'swiper/element';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { FacebookAuthProvider, GoogleAuthProvider } from '@angular/fire/auth';
 
 interface userlogin {
   username: string,
@@ -29,7 +30,7 @@ export class LoginComponent implements OnInit {
   imagesURLS = ["../../assets/img/couple.jpg", "../../assets/img/booties.jpg", "../../assets/img/baptism.jpg"];
   swiper: any;
   constructor(public router: Router,
-    @Optional() private auth: Auth, 
+    public readonly auth: AngularFireAuth, @Inject(PLATFORM_ID) platformId: object, 
     iconRegistry: MatIconRegistry, 
     sanitizer: DomSanitizer,
     private _elementRef : ElementRef) { 
@@ -52,14 +53,14 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithGoogle() {
-    signInWithPopup(this.auth, new GoogleAuthProvider()).then((res) => {
+    this.auth.signInWithPopup(new GoogleAuthProvider()).then((res) => {
       if(res.user){
         this.router.navigateByUrl('');
       }
     });
   }
   loginWithFacebook() {
-    signInWithPopup(this.auth, new FacebookAuthProvider()).then((res) => {
+    this.auth.signInWithPopup(new FacebookAuthProvider()).then((res) => {
       if(res.user){
         this.router.navigateByUrl('');
       }

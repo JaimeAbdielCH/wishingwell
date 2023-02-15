@@ -1,9 +1,11 @@
-import { ApplicationRef, Component, isDevMode, Optional } from '@angular/core';
+import { ApplicationRef, Component, Inject, isDevMode, Optional, PLATFORM_ID } from '@angular/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { EMPTY, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { traceUntilFirst } from '@angular/fire/performance';
+import { trace, traceUntilFirst } from '@angular/fire/performance';
 import { Auth, authState, signInAnonymously, signOut, User, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { isPlatformServer } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +19,7 @@ export class AppComponent {
   public readonly user: Observable<User | null> = EMPTY;
   showLoginButton = false;
   constructor(
-    @Optional() private auth: Auth,
+    public readonly auth: AngularFireAuth, @Inject(PLATFORM_ID) platformId: object,
     appRef: ApplicationRef,
   ) {
     if (isDevMode()) {
@@ -28,13 +30,12 @@ export class AppComponent {
         console.log('isStable', it);
       });
     }
-    if (auth) {
-      this.user = authState(this.auth);
-      this.userDisposable = authState(this.auth).pipe(
+    if (!isPlatformServer(platformId)) {
+      this.userDisposable = this.auth.authState.pipe(
         traceUntilFirst('auth'),
         map(u => !!u)
       ).subscribe(isLoggedIn => {
-        this.showLoginButton = isLoggedIn;
+        this.showLoginButton = isLoggedIn as boolean;
       });
     }
   }

@@ -8,10 +8,11 @@ import { Evento } from '../interfaces/evento.interface';
 import { ImageInfo, Regalo } from '../interfaces/regalo.interface';
 import { RegalosComponent } from '../regalos/regalos.component';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, FirebaseStorage, deleteObject } from "@angular/fire/storage";
-import { docData, doc, Firestore, DocumentReference, updateDoc, arrayRemove, arrayUnion } from '@angular/fire/firestore';
+import { arrayRemove, arrayUnion } from '@angular/fire/firestore';
 import { Loader } from "@googlemaps/js-api-loader";
 import { MatDialog } from '@angular/material/dialog';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-editar-evento',
@@ -21,7 +22,7 @@ import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 })
 
 export class EditarEventoComponent implements OnInit {
-  eventoDoc: DocumentReference<Evento>;
+  eventoDoc: AngularFirestoreDocument<Evento>;
   evento$: Observable<Evento>;
   fechaPicker = new FormControl(new Date('7/28/2022'));
   evento_indentifier = "";
@@ -59,14 +60,14 @@ export class EditarEventoComponent implements OnInit {
 
   constructor(private router: Router,
     private route: ActivatedRoute,
-    private firestore: Firestore,
+    private firestore: AngularFirestore,
     @Inject(LOCALE_ID) private locale: string,
     public dialog: MatDialog,
     private cdr: ChangeDetectorRef) {
 
     this.evento_indentifier = this.route.snapshot.paramMap.get('id')!;
-    this.eventoDoc = doc(firestore, 'eventos/'+this.evento_indentifier) as DocumentReference<Evento>;
-    this.evento$ = docData(this.eventoDoc) as Observable<Evento>;
+    this.eventoDoc = this.firestore.doc<Evento>('eventos/'+this.evento_indentifier);
+    this.evento$ = this.eventoDoc.valueChanges() as Observable<Evento>;
 
     this.evento$.subscribe((evento: Evento) => {
         this.nombreEvento = evento.nombre;
@@ -99,7 +100,9 @@ export class EditarEventoComponent implements OnInit {
               this.latlng = pos.lat() + ',' + pos.lng();
               this.marker.setPosition(pos);
               evento.latlng = this.latlng;
-              updateDoc(this.eventoDoc, {latlng: this.latlng})
+              this.eventoDoc.update({
+                latlng: this.latlng
+              })
             }
           });
         });
@@ -121,11 +124,11 @@ export class EditarEventoComponent implements OnInit {
     evento.nombre = this.nombreEvento;
     this.previews = [];
     this.progressInfos = [];
-    updateDoc(this.eventoDoc, evento);
+    this.eventoDoc.update(evento);
   }
 
   remove(invitado: string): void {
-    updateDoc(this.eventoDoc, {
+    this.eventoDoc.update({
       invitados: arrayRemove(invitado) as any as string[]
     });
   }
@@ -134,7 +137,7 @@ export class EditarEventoComponent implements OnInit {
     const value = (event.value || '').trim();
     // Add our fruit
     if (value) {
-      updateDoc(this.eventoDoc, {
+      this.eventoDoc.update({
         invitados: arrayUnion(value) as any as string[]
       })
     }
@@ -174,7 +177,7 @@ export class EditarEventoComponent implements OnInit {
     regaloDialogRef.afterClosed().subscribe((data: { eventid: string, regalo: Regalo }) => {
       if (data.regalo != undefined) {
         evento.regalos?.push(data.regalo);
-        updateDoc(this.eventoDoc, evento);
+        this.eventoDoc.update(evento);
       }
     });
   }
@@ -190,7 +193,7 @@ export class EditarEventoComponent implements OnInit {
         if (regaloId != undefined) {
           this.regalos[regaloId] = regalo;
           evento.regalos = this.regalos;
-          updateDoc(this.eventoDoc, evento);
+          this.eventoDoc.update(evento);
         }
       }
     });
@@ -204,45 +207,46 @@ export class EditarEventoComponent implements OnInit {
     switch (element) {
       case 'nombre':
         if (this.nombreEvento) {
-          updateDoc(this.eventoDoc, {
+          this.eventoDoc.update({
             nombre: this.nombreEvento
-          })
+          });
         }
         break;
       case 'fecha':
         if (this.fechaPicker) {
-          updateDoc(this.eventoDoc, {
+          this.eventoDoc.update({
             fecha: formatDate(this.fechaPicker.value as Date, 'MM/dd/YYYY', this.locale)
-          })
+          });
         }
         break;
       case 'tituloEvento':
         if (this.tituloEvento) {
-          updateDoc(this.eventoDoc, {
+          this.eventoDoc.update({
             tituloDescripcion: this.tituloEvento
-          })
+          });
         }
         break;
       case 'descripcionEvento':
         if (this.descripcionEvento) {
-          updateDoc(this.eventoDoc, {
+          this.eventoDoc.update({
             descripcion: this.descripcionEvento
-          })
+          });
         }
         break;
       case 'informacionPago':
         if (this.informacionPago) {
-          updateDoc(this.eventoDoc, {
+          this.eventoDoc.update({
             informacionDePago: this.informacionPago
-          })
+          });
         }
         break;
       case 'hora':
         if (this.eventoHora) {
-          updateDoc(this.eventoDoc, {
+          this.eventoDoc.update({
             hora: this.eventoHora
-          })
+          });
         }
+        break;
     }
   }
 
@@ -295,15 +299,15 @@ export class EditarEventoComponent implements OnInit {
             switch (para) {
               case "header":
                 this.headerImageFile = downloadURL;
-                updateDoc(this.eventoDoc, {
+                this.eventoDoc.update({
                   imagenHeader: downloadURL
-                })
+                });
                 break;
               case "portada":
                 this.portadaImageFile = downloadURL;
-                updateDoc(this.eventoDoc, {
+                this.eventoDoc.update({
                   imagenPortada: downloadURL
-                })
+                });
             }
           });
 
@@ -378,7 +382,7 @@ export class EditarEventoComponent implements OnInit {
               url: downloadURL
             }
             this.imagenesEventos?.push(imgInf);
-            updateDoc(this.eventoDoc, {
+            this.eventoDoc.update({
               imagenesEventos: arrayUnion(imgInf) as any as ImageInfo[]
             })
           });
@@ -393,7 +397,7 @@ export class EditarEventoComponent implements OnInit {
   }
 
   deleteImage(image: ImageInfo) {
-    updateDoc(this.eventoDoc, {
+    this.eventoDoc.update({
       imagenesEventos: arrayRemove(image) as any as ImageInfo[]
     })
     const imageStorageRef = ref(this.storage, image.url);

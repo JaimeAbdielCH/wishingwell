@@ -8,6 +8,9 @@ import { Evento } from '../interfaces/evento.interface';
 import { Loader } from "@googlemaps/js-api-loader";
 import Swiper, { Autoplay, Pagination } from 'swiper';
 import { Auth } from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { DocumentSnapshot, getDoc } from '@angular/fire/firestore';
 
 interface ConteoRegresivo {
   dia: string,
@@ -41,20 +44,19 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   center: google.maps.LatLngLiteral = { lat: 8.9923203, lng: -79.5101788 };
   latlng?: string = ' 8.9923203,-79.5101788';
   marker?: google.maps.Marker;
-  unsub: any;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   swiper: any;
   constructor(
     private route: ActivatedRoute,
-    private firestore: Firestore,
+    public firestore: AngularFirestore,
     private cdr: ChangeDetectorRef,
-    private auth: Auth
+    public readonly auth: AngularFireAuth
   ) {
     this.event_iden = this.route.snapshot.paramMap.get('id')!;
-    const getEvent = doc(firestore, 'eventos/' + this.event_iden);
-    
-
-    this.unsub = onSnapshot(getEvent, (ele) => {
+    const getEvent = this.firestore.doc<Evento>('eventos/' + this.event_iden);
+    const evento = getDoc(getEvent.ref);
+    this.conteoRegresivo = getCountDownObject(new Date());
+    getDoc(getEvent.ref).then((ele: DocumentSnapshot<Evento>) => {
       this.Event = ele.data() as Evento;
       this.eventDate = new Date(this.Event.fecha+' '+this.Event.hora+':00');
       this.conteoRegresivo = getCountDownObject(this.eventDate);
@@ -76,6 +78,8 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         });
       });
     });
+
+    
     this.conteoRegresivo = getCountDownObject(new Date());
     this.conteo$ = interval(1000).subscribe(e => {
       this.setTimeChips();
@@ -90,7 +94,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.conteo$.unsubscribe();
-    this.unsub();
   }
 
   async ngOnInit() {

@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
+import { Injectable, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, RouterStateSnapshot, Routes, TitleStrategy } from '@angular/router';
 import { EventosComponent } from './eventos/eventos.component';
 import { RegalosComponent } from './regalos/regalos.component';
 
@@ -12,7 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { UserInfoComponent } from './user-info/user-info.component';
 import { EventDetailComponent } from './event-detail/event-detail.component';
 
-import { AuthGuard } from '@angular/fire/auth-guard'
+import { AngularFireAuthGuard, canActivate, isNotAnonymous } from '@angular/fire/compat/auth-guard';
 
 //##angular material
 import {MatCardModule} from '@angular/material/card';
@@ -30,14 +30,16 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { Title } from '@angular/platform-browser';
 
-const routes: Routes = [ { path: '', component: HomeComponent, pathMatch: 'full', canActivate: [AuthGuard] },
-{path: 'user-info', component: UserInfoComponent, pathMatch: 'full', canActivate: [AuthGuard]},
-{ path: 'eventos', component: EventosComponent, pathMatch: 'full', canActivate: [AuthGuard] },
-{ path: 'evento/:id', component: EditarEventoComponent, canActivate: [AuthGuard] },
-{ path: 'evento-detail/:id', component: EventDetailComponent, canActivate: [AuthGuard] },
-{ path: 'regalos', component: RegalosComponent, canActivate: [AuthGuard] },
+const routes: Routes = [ { title: 'Whishing Well', path: '', component: HomeComponent, pathMatch: 'full', canActivate: [AngularFireAuthGuard] },
+{path: 'user-info', component: UserInfoComponent, pathMatch: 'full', canActivate: [AngularFireAuthGuard]},
+{title: 'Eventos', path: 'eventos', component: EventosComponent, pathMatch: 'full', canActivate: [AngularFireAuthGuard] },
+{ path: 'evento/:id', component: EditarEventoComponent, canActivate: [AngularFireAuthGuard] },
+{ path: 'evento-detail/:id', component: EventDetailComponent, canActivate: [AngularFireAuthGuard] },
+{ path: 'regalos', component: RegalosComponent, canActivate: [AngularFireAuthGuard] },
 { path: '**', component: PageNotFoundComponent }];
+
 
 @NgModule({
   declarations:[
@@ -71,6 +73,7 @@ const routes: Routes = [ { path: '', component: HomeComponent, pathMatch: 'full'
     MatListModule,
   ],
   exports: [RouterModule],
-  providers: [MatDatepickerModule]})
-export class AppRoutingModule { }
+  providers: [MatDatepickerModule]
+})
+export class AppRoutingModule {}
 

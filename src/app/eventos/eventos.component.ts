@@ -5,32 +5,24 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Auth } from '@angular/fire/auth';
 import { collection, CollectionReference, deleteDoc, doc, Firestore, getDocs, query, QuerySnapshot, setDoc, where } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 @Component({
   selector: 'app-eventos',
   templateUrl: './eventos.component.html',
   styleUrls: ['./eventos.component.scss']
 })
 export class EventosComponent implements OnInit {
-  private misEventos?: CollectionReference<Evento>;
-  eventos?: Evento[];
+  private misEventos?: AngularFirestoreCollection<Evento>;
+  eventos?: Observable<Evento[]>;
   user: any;
-  constructor(private route: Router,  @Optional() private auth: Auth, private firestore: Firestore) { 
+  constructor(private route: Router,  private auth: AngularFireAuth, private firestore: AngularFirestore) { 
     
   }
 
   async ngOnInit(): Promise<void> {
     this.user = await this.auth.currentUser;
-    this.misEventos = collection(this.firestore, 'eventos', ) as CollectionReference<Evento>;
-    
-    const q = query(this.misEventos, where('ownerId', '==', this.user.uid));
-    getDocs<Evento>(q).then(querySnapshot => {
-      if(this.eventos == undefined) {
-        this.eventos = [];
-      }
-      querySnapshot.forEach(ele => {
-        this.eventos?.push(ele.data());
-      })
-    });
+    this.misEventos = this.firestore.collection<Evento>('eventos', ref => ref.where('ownerId', '==', this.user.uid));
+    this.eventos = this.misEventos.valueChanges();
   }
 
   openEvent = (eventid: number) => {
@@ -38,15 +30,14 @@ export class EventosComponent implements OnInit {
   }
 
   removeEvent = (eventid: string) => {
-    const docToDelete = doc(this.firestore, 'evento', eventid);
-    deleteDoc(docToDelete);
+    this.misEventos?.doc(eventid).delete();
   }
 
   nuevoEvento = async () => {
     const today = new Date();
-    const id = doc(this.firestore, 'evento');
+    const id = this.firestore.createId();
     const nuevoEvento: Evento = {
-      id: id.id,
+      id: id,
       ownerId: this.user.uid,
       nombre: "",
       descripcion: "",
@@ -57,8 +48,9 @@ export class EventosComponent implements OnInit {
       invitados: [],
       regalos: []
     }
-    setDoc(id, nuevoEvento).then(() => {
-      this.route.navigateByUrl('evento/'+id.id);
+
+    this.misEventos?.doc(id).set(nuevoEvento).then(() => {
+      this.route.navigateByUrl('evento/'+id);
     });
     
   }
@@ -67,7 +59,6 @@ export class EventosComponent implements OnInit {
   
   goHome = () => {
     this.route.navigateByUrl('');
-  }
-  
+  }  
 
 }

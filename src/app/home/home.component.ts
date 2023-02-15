@@ -1,9 +1,9 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { Evento } from '../interfaces/evento.interface';
 import { Router } from '@angular/router';
-import { CollectionReference, doc, Firestore, getDocs, query, setDoc, where } from '@angular/fire/firestore';
-import { Auth } from '@angular/fire/auth';
-import { collection } from '@firebase/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 
 @Component({
@@ -12,12 +12,15 @@ import { collection } from '@firebase/firestore';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  private misEventos: CollectionReference<Evento> | undefined;
+  private misEventos: AngularFirestoreCollection<Evento> | undefined;
   
-  eventos: Evento[] | undefined;
+  eventos$: Observable<Evento[]> | undefined;
   
   user: any;
-  constructor(private route: Router, private auth: Auth, private firestore: Firestore) {
+  constructor(
+    private route: Router, 
+    public readonly auth: AngularFireAuth, 
+    public firestore: AngularFirestore) {
     this.loadEventos();
   }
   
@@ -27,25 +30,18 @@ export class HomeComponent implements OnInit {
 
   loadEventos = async () => {
     this.user = await this.auth.currentUser;
-    this.misEventos = collection(this.firestore, 'eventos') as CollectionReference<Evento>;
-    const q = query(this.misEventos, where('ownerId', '==', this.user.uid));
-    getDocs<Evento>(q).then(querySnapshot => {
-      if(this.eventos == undefined) {
-        this.eventos = [];
-      }
-      querySnapshot.forEach(ele => {
-        this.eventos?.push(ele.data());
-      })
-    });
+    this.misEventos = this.firestore.collection<Evento>
+    ('eventos', ref => ref.where('ownerId', '==', this.user.uid));
+    this.eventos$ = this.misEventos.valueChanges();
   }
 
   nuevoEvento = async () => {
     const today = new Date();
-    const newDoc = doc(this.firestore, 'eventos');
+    const newDocId = this.firestore.createId();
     const currUser = await this.auth.currentUser;
     const userId = currUser?.uid;
     const nuevoEvento: Evento = {
-      id: newDoc.id,
+      id: newDocId,
       ownerId: userId as string,
       nombre: "",
       descripcion: "",
@@ -55,15 +51,14 @@ export class HomeComponent implements OnInit {
       regalos: []
     }
 
-    setDoc(newDoc, nuevoEvento).then(() => {
-      this.route.navigateByUrl('evento/'+newDoc.id);
+    this.misEventos?.doc(newDocId).set(nuevoEvento).then(() => {
+      this.route.navigateByUrl('evento/'+newDocId);
     });
     
   }
 
   seeEventId(id:string) {
-      console.log(id);
-      //this.route.navigateByUrl('evento-detail/'+id);
+      this.route.navigateByUrl('evento-detail/'+id);
   }
 
 }

@@ -1,9 +1,11 @@
 .app-toolbar {
-    position: fixed;
     position: -webkit-fixed; /* For macOS/iOS Safari */
-    bottom: 0; /* Sets the sticky toolbar to be on bottom */
+    position: fixed;
+    top: 0; /* Sets the sticky toolbar to be on bottom */
     left: 0;
     z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+/*     background-color: var(--md-sys-color-surface-variant-light);
+    color: var(--md-sys-color-primary-light); */
 }
 
 .topBarColor {

@@ -107,6 +107,21 @@ $my-primary: mat.define-palette($whishingwell-palette, 500);
 $my-accent: mat.define-palette($accent-palette, 500);
 $my-warn: mat.define-palette($warn-palette, 500);
 
+@font-face {
+  font-family: "Dancing Script";
+  src: url(./assets/fonts/Dancing_Script/DancingScript-VariableFont_wght.ttf);
+}
+
+@font-face {
+font-family: "Primary";
+src: url(./assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf);
+}
+
+@font-face {
+font-family: "Secondary";
+src: url(./assets/fonts/Cormorant_Unicase/CormorantUnicase-Regular.ttf);
+}
+
 $my-theme: mat.define-light-theme((
  color: (
    primary: $my-primary,
@@ -116,14 +131,13 @@ $my-theme: mat.define-light-theme((
  density: 0,
 ));
 
+
 @include mat.all-component-themes($my-theme);
 
-@font-face {
-    font-family: "Dancing Script";
-    src: url(./assets/fonts/Dancing_Script/DancingScript-VariableFont_wght.ttf);
-}
 
-html, body { height: 100%; }
+
+html, body { height: 100%; font-family: "Secondary" !important; }
+
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 h6 {
   font-size: 20px !important;
@@ -131,7 +145,7 @@ h6 {
     margin: 0 !important;
 }
 .col-container {
-  padding-top: 1vh;
+  padding-top:10vh;
   padding-bottom: 8vh;
 }
 .firebase-emulator-warning {
@@ -143,6 +157,14 @@ h1 {
   text-align: center;
   font-size: 110px !important;
   line-height: 96px !important;
+}
+
+.mat-typography h1, h2, h3, h4, h5, h6 {
+  font-family: "Primary" !important;
+}
+
+.mdc-button {
+  font-family: "Primary" !important;
 }
 
 h2 {

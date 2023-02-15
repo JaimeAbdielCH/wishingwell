@@ -8,5 +8,6 @@ export const environment = {
     messagingSenderId: '1075787037606',
     measurementId: 'G-LFKLLVSRX2',
   },
-  production: true
+  production: true,
+  useEmulators: false
 };
