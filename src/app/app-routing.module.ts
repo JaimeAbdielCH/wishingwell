@@ -30,7 +30,10 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import { Title } from '@angular/platform-browser';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatSelectModule} from '@angular/material/select';
 
 const routes: Routes = [ { title: 'Whishing Well', path: '', component: HomeComponent, pathMatch: 'full', canActivate: [AngularFireAuthGuard] },
 {path: 'user-info', component: UserInfoComponent, pathMatch: 'full', canActivate: [AngularFireAuthGuard]},
@@ -71,6 +74,10 @@ const routes: Routes = [ { title: 'Whishing Well', path: '', component: HomeComp
     MatToolbarModule,
     MatProgressBarModule,
     MatListModule,
+    MatSlideToggleModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatSelectModule
   ],
   exports: [RouterModule],
   providers: [MatDatepickerModule]

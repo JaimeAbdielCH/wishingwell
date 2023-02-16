@@ -1,8 +1,10 @@
 import { Regalo, ImageInfo } from "./regalo.interface"
 export interface Evento {
     id: string,
+    private?: boolean,
     ownerId: string,
     tituloDescripcion?: string,
+    tipoEvento?: "Boda" | "Bautizo" | "Baby Shower" | "Cumpleaños",
     descripcion: string,
     imagenPortada?: string,
     imagenesEventos?: ImageInfo[],
@@ -13,5 +15,9 @@ export interface Evento {
     invitados?: string[],
     regalos?: Regalo[],
     latlng?: string, //{ center: {lat: 30, lng: -110}, zoom: 8, mapId: '1234' } as google.maps.MapOptions
-    informacionDePago?: string
+    informacionDePago?: string,
+    fontFamily?: string,
+    fontColor?: string,
+    defaultImage?: boolean,
+    mensajeInvitacion?: string
 }

@@ -6,7 +6,26 @@ margin-left: auto;">
     </button>
     <h1>Datos de evento</h1>
     <div class="groupContainer">
-      <h2>Cabecera</h2>
+      <h2>Cabecera del Evento</h2>
+      <!--Evento Privado?-->
+      <mat-slide-toggle
+          class="mb-3"
+          color="primary"
+          [checked]="evento.private"
+          (change)="onTogle($event)">
+        ¿Evento Privado?
+      </mat-slide-toggle>
+      <!--Tipo de Evento-->
+      <div class="mb-3 mt-3">
+        <mat-form-field appearance="fill">
+          <mat-label>Tipos de eventos</mat-label>
+          <mat-select (valueChange)="eventTypeChanged($event)" [value]="evento.tipoEvento">
+            <mat-option *ngFor="let tipo of tiposDeEventos" [value]="tipo">
+              {{tipo}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
       <!--Titulo del evento-->
       <mat-form-field class="full-width" appearance="fill">
         <mat-label>Título del Evento</mat-label>
@@ -14,10 +33,27 @@ margin-left: auto;">
           (change)="textChanged('nombre')">
         <mat-hint>Titulo que aparecera en la cabecera del evento. max: 50</mat-hint>
       </mat-form-field>
-      <!--Fechae del evento-->
+      <!--Font header-->
+      <div class="mb-3 mt-3">
+        <h6 class="mb-1">Fuente del título:</h6>
+        <mat-radio-group [(ngModel)]="evento.fontFamily" (change)="onFontChoose($event)">
+          <mat-radio-button class="bodoni_moda" value="Bodoni_Moda">{{nombreEvento}}</mat-radio-button>
+          <mat-radio-button class="coustard" value="Coustard">{{nombreEvento}}</mat-radio-button>
+          <mat-radio-button class="lobstertwo" value="LobsterTwo">{{nombreEvento}}</mat-radio-button>
+          <mat-radio-button class="poiret_one" value="Poiret_One">{{nombreEvento}}</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <!--Font Color-->
+
+        <mat-form-field class="full-width" appearance="fill">
+          <mat-label>Seleccione el color del titulo</mat-label>
+          <input matInput type="color" [(ngModel)]="evento.fontColor" (change)="colorChanged($event)">
+        </mat-form-field>
+
+      <!--Fecha del evento-->
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Seleccione una fecha</mat-label>
-        <input matInput [matDatepicker]="datepicker" [formControl]="fechaPicker" name="fechaEvento" (dateChange)="textChanged('fecha')">
+        <input matInput [matDatepicker]="datepicker" [min]="minDate" [formControl]="fechaPicker" name="fechaEvento" (dateChange)="textChanged('fecha')">
         <mat-hint>MM/DD/YYYY</mat-hint>
         <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
         <mat-datepicker #datepicker>
@@ -32,12 +68,13 @@ margin-left: auto;">
         <mat-label>Hora</mat-label>
         <input type="time" matInput [(ngModel)]="eventoHora" name="hour" min="00:00" max="23:00" (change)="textChanged('hora')">
      </mat-form-field>
-      <!--Imagen de fondo del titulo-->
+      <!--Preview de cabecera-->
       <mat-card class="card-image-chooser">
-        <img mat-card-image src="{{evento.imagenHeader ?? 'https://via.placeholder.com/700x300?text=Sin Imagen'}}"
-          alt="Photo of a Shiba Inu">
-        <mat-card-content>
-        </mat-card-content>
+        <!--Preview-->
+        <div mat-card-image class="headerContainer">
+          <img class="imageHeader" src="{{evento.imagenHeader ?? 'https://via.placeholder.com/700x300?text='}}" alt="Imagen de header" />
+          <h2 class="headerTitle" style="font-family: '{{evento.fontFamily}}' !important; color: {{evento.fontColor ?? '#000'}} !important">{{evento.nombre}}</h2>
+        </div>
         <mat-card-actions>
           <mat-form-field class="full-width" appearance="fill">
             <div>
@@ -48,6 +85,23 @@ margin-left: auto;">
                 (change)="onImageHeaderChanged($event)" />
             </div>
           </mat-form-field>
+          <section class="example-section">
+            <mat-checkbox class="example-margin" [(ngModel)]="evento.defaultImage" (change)="onImagenDisponible($event)">Imagen disponible</mat-checkbox>
+          </section>
+
+            <div class="mb-3 mt-3" *ngIf="evento.defaultImage">
+              <mat-form-field appearance="fill">
+                <mat-label>Opciones de imagenes</mat-label>
+                <mat-select (valueChange)="onDefaultImageChanged($event)" [value]="evento.imagenHeader">
+                  <mat-option [value]="imgUrl" *ngFor="let imgUrl of imagenesDefaultUrl">
+                    <div>
+                      <img src="{{imgUrl}}" width="190px" class="mb-1 mt-1" />
+                    </div>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
         </mat-card-actions>
       </mat-card>
     </div>
@@ -65,9 +119,8 @@ margin-left: auto;">
         <textarea matInput [(ngModel)]="descripcionEvento" style="width: 100% !important; height: 10vh;" (change)="textChanged('descripcionEvento')"></textarea>
       </mat-form-field>
       <!--Lista de Invitados-->
-    <h2>Lista de Invitados</h2>
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Email de invitados</mat-label>
+      <mat-label>Lista de email de los invitados</mat-label>
       <mat-chip-grid #chipGrid aria-label="Invitation List">
         <mat-chip-row *ngFor="let invitado of evento.invitados" (removed)="remove(invitado)"
                   [aria-description]="'presione enter para editar ' + invitado">
@@ -85,11 +138,17 @@ margin-left: auto;">
           (matChipInputTokenEnd)="add($event)">
       </mat-chip-grid>
     </mat-form-field>
+    <!--Mensaje de Invitación-->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Mensaje de Invitación</mat-label>
+      <textarea matInput [(ngModel)]="mensajeInvitacion" style="width: 100% !important; height: 10vh;" (change)="textChanged('mensajeInvitacion')"></textarea>
+    </mat-form-field>
     <!--Información de Pago-->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Información de Pago</mat-label>
       <textarea matInput [(ngModel)]="informacionPago" style="width: 100% !important; height: 10vh;" (change)="textChanged('informacionPago')"></textarea>
     </mat-form-field>
+    
     <!--Mapa de la locación-->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Lugar del Evento</mat-label>

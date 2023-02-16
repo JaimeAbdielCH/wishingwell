@@ -122,6 +122,26 @@ font-family: "Secondary";
 src: url(./assets/fonts/Cormorant_Unicase/CormorantUnicase-Regular.ttf);
 }
 
+@font-face {
+  font-family: "Bodoni_Moda";
+  src: url(./assets/fonts/Bodoni_Moda/BodoniModa-VariableFont_opszwght.ttf);
+}
+
+@font-face {
+  font-family: "Coustard";
+  src: url(./assets/fonts/Coustard/Coustard-Regular.ttf);
+}
+
+@font-face {
+  font-family: "LobsterTwo";
+  src: url(./assets/fonts/LobsterTwo/LobsterTwo-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Poiret_One";
+  src: url(./assets/fonts/Poiret_One/PoiretOne-Regular.ttf);
+}
+
 $my-theme: mat.define-light-theme((
  color: (
    primary: $my-primary,
@@ -181,10 +201,8 @@ h2 {
   padding: 1.7vw;
   margin-bottom: 12px;
   border-radius: 16px;
-}
-
-.groupContainer h2 {
-  color: white;
+  background-color: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
 }
 
 textarea.mat-input-element {
@@ -216,4 +234,48 @@ textarea.mat-input-element {
 
 .container {
   max-width: max-content !important;
+}
+
+.bodoni_moda label {
+  font-family: "Bodoni_Moda" !important;
+  font-size: 25px;
+}
+
+.coustard label{
+  font-family: "Coustard" !important;
+  font-size: 25px;
+}
+
+.lobstertwo label{
+  font-family: "LobsterTwo" !important;
+  font-size: 25px;
+}
+
+.poiret_one label{
+  font-family: "Poiret_One" !important;
+  font-size: 25px;
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  height: 34vh;
+  align-content: center;
+  margin-right: auto;
+  margin-left: auto;
+  overflow: hidden;
+}
+
+.imageHeader {
+  width: 100%;
+}
+
+.headerTitle {
+  z-index: 1000;
+  width: 30vw;
+  font-size: 8vw !important;
+  line-height: 8vw !important;
+  position: absolute;
+  align-self: center;
 }

@@ -16,8 +16,7 @@
     padding-bottom: 6vh !important;
 }
 
-mat-toolbar {
-    height:20px !important;
-    font-size: 20px;
-    margin-bottom: 7px;
+.mdc-card__actions {
+    flex-direction: column !important;
+    align-items: flex-start;
 }

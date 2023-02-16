@@ -2,30 +2,6 @@
 @import 'swiper/scss/navigation';
 @import 'swiper/scss/pagination';
 
-.headerContainer {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    height: 34vh;
-    align-content: center;
-    margin-right: auto;
-    margin-left: auto;
-    overflow: hidden;
-}
-
-.imageHeader {
-    height: 34vh;
-}
-
-.headerTitle {
-    z-index: 1000;
-    width: 30vw;
-    font-size: 70px !important;
-    line-height: 70px !important;
-    position: absolute;
-    top: 10vh;
-}
-
 .cuentaregresiva mat-chip {
     font-size: 22px;
 }

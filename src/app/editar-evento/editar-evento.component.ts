@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { formatDate } from '@angular/common';
-import { FormControl } from '@angular/forms';
+import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, ObservableInput, of } from 'rxjs';
 import { Evento } from '../interfaces/evento.interface';
@@ -13,6 +13,10 @@ import { Loader } from "@googlemaps/js-api-loader";
 import { MatDialog } from '@angular/material/dialog';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatRadioChange } from '@angular/material/radio';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-editar-evento',
@@ -40,7 +44,11 @@ export class EditarEventoComponent implements OnInit {
   portadaImageFile: string = "";
   imagenesEventos: ImageInfo[] = new Array<ImageInfo>();
   storage: FirebaseStorage;
+  defaultImages = false;
+  public color:string;
 
+  
+  minDate?:Date;
   selectedFiles?: FileList;
   selectedFileNames: string[] = [];
   progressInfos: any[] = [];
@@ -58,17 +66,47 @@ export class EditarEventoComponent implements OnInit {
   latlng?: string = ' 8.9923203,-79.5101788';
   marker?: google.maps.Marker;
 
+  tiposDeEventos = ["Boda", "Bautizo", "Baby Shower", "Cumpleaños"];
+  defUrl:string = "";
+  imagenesDefault = {
+    boda: [
+      "./assets/img/happy-mothers-day.jpg",
+      "./assets/img/heart.jpg",
+      "./assets/img/peonies.jpg",
+      "./assets/img/rose.jpg"
+    ],
+    babyshower: [
+      "./assets/img/rusk-with-mice.jpg",
+      "./assets/img/desktop.jpg",
+      "./assets/img/rusk-with-mice-cyan.jpg"
+    ],
+    bautizo: [
+      "./assets/img/christening.jpg",
+      "./assets/img/cross.jpg",
+      "./assets/img/church.jpg"
+    ],
+    cumples: [
+      "./assets/img/happy-birthday-ballons.jpg",
+      "./assets/img/happy-birthday-valentine.jpg",
+      "./assets/img/happy-birthday-cake.jpg"
+    ]
+  };
+
+  imagenesDefaultUrl: string[] = [];
+  mensajeInvitacion: any;
+
   constructor(private router: Router,
     private route: ActivatedRoute,
     private firestore: AngularFirestore,
     @Inject(LOCALE_ID) private locale: string,
     public dialog: MatDialog,
     private cdr: ChangeDetectorRef) {
-
+    this.minDate = new Date()
+    this.color = '';
     this.evento_indentifier = this.route.snapshot.paramMap.get('id')!;
     this.eventoDoc = this.firestore.doc<Evento>('eventos/'+this.evento_indentifier);
     this.evento$ = this.eventoDoc.valueChanges() as Observable<Evento>;
-
+    
     this.evento$.subscribe((evento: Evento) => {
         this.nombreEvento = evento.nombre;
         this.descripcionEvento = evento.descripcion;
@@ -106,7 +144,26 @@ export class EditarEventoComponent implements OnInit {
             }
           });
         });
-  
+        if(evento.defaultImage){
+          switch(evento.tipoEvento) {
+            case "Boda": {
+              this.imagenesDefaultUrl = this.imagenesDefault.boda;
+              break;
+            };
+            case "Bautizo": {
+              this.imagenesDefaultUrl = this.imagenesDefault.bautizo;
+              break;
+            };
+            case "Baby Shower": {
+              this.imagenesDefaultUrl = this.imagenesDefault.babyshower;
+              break;
+            };
+            case "Cumpleaños": {
+              this.imagenesDefaultUrl = this.imagenesDefault.cumples;
+              break;
+            };
+          }
+        }
       });
     
     this.storage = getStorage();
@@ -114,6 +171,65 @@ export class EditarEventoComponent implements OnInit {
 
   ngOnInit(): void {
 
+  }
+
+  onImagenDisponible(event: MatCheckboxChange) {
+    this.eventoDoc.update({
+      defaultImage: event.checked
+    });
+    if(!event.checked) {
+      this.eventoDoc.update({
+        imagenHeader: 'https://via.placeholder.com/700x300?text='
+      })
+    }
+  }
+
+  onDefaultImageChanged(event: any) {
+    this.eventoDoc.update({
+      imagenHeader: event
+    })
+  }
+
+  eventTypeChanged(event: any) {
+    this.eventoDoc.update({
+      tipoEvento: event
+    });
+    switch(event) {
+      case "Boda": {
+        this.imagenesDefaultUrl = this.imagenesDefault.boda;
+        break;
+      };
+      case "Bautizo": {
+        this.imagenesDefaultUrl = this.imagenesDefault.bautizo;
+        break;
+      };
+      case "Baby Shower": {
+        this.imagenesDefaultUrl = this.imagenesDefault.babyshower;
+        break;
+      };
+      case "Cumpleaños": {
+        this.imagenesDefaultUrl = this.imagenesDefault.cumples;
+        break;
+      };
+    }
+  }
+
+  colorChanged(event: any) {
+    this.eventoDoc.update({
+      fontColor: event.srcElement.value
+    });
+  }
+
+  onTogle(event: MatSlideToggleChange) {
+    this.eventoDoc.update({
+      private: event.checked
+    });
+  }
+
+  onFontChoose(event: MatRadioChange) {
+    this.eventoDoc.update({
+      fontFamily: event.value
+    });
   }
 
   update(evento: Evento): void {
@@ -214,6 +330,7 @@ export class EditarEventoComponent implements OnInit {
         break;
       case 'fecha':
         if (this.fechaPicker) {
+          
           this.eventoDoc.update({
             fecha: formatDate(this.fechaPicker.value as Date, 'MM/dd/YYYY', this.locale)
           });
@@ -237,6 +354,13 @@ export class EditarEventoComponent implements OnInit {
         if (this.informacionPago) {
           this.eventoDoc.update({
             informacionDePago: this.informacionPago
+          });
+        }
+        break;
+      case 'mensajeInvitacion':
+        if(this.mensajeInvitacion) {
+          this.eventoDoc.update({
+            mensajeInvitacion: this.mensajeInvitacion
           });
         }
         break;
