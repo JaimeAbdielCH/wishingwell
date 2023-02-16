@@ -12,7 +12,7 @@ export interface Evento {
     nombre?: string,
     fecha?: string,
     hora?: string,
-    invitados?: string[],
+    invitados?: Invitado[],
     regalos?: Regalo[],
     latlng?: string, //{ center: {lat: 30, lng: -110}, zoom: 8, mapId: '1234' } as google.maps.MapOptions
     informacionDePago?: string,
@@ -20,4 +20,9 @@ export interface Evento {
     fontColor?: string,
     defaultImage?: boolean,
     mensajeInvitacion?: string
+}
+
+export interface Invitado {
+    email?: string,
+    notificado?: boolean
 }

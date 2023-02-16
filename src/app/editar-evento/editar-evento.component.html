@@ -123,8 +123,8 @@ margin-left: auto;">
       <mat-label>Lista de email de los invitados</mat-label>
       <mat-chip-grid #chipGrid aria-label="Invitation List">
         <mat-chip-row *ngFor="let invitado of evento.invitados" (removed)="remove(invitado)"
-                  [aria-description]="'presione enter para editar ' + invitado">
-          {{invitado}}
+                  [aria-description]="'presione enter para editar ' + invitado.email">
+          {{invitado.email}}
           <button 
             matChipRemove 
             [attr.aria-label]="'remove ' + invitado">

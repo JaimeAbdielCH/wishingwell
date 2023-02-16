@@ -4,7 +4,7 @@ import { formatDate } from '@angular/common';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, ObservableInput, of } from 'rxjs';
-import { Evento } from '../interfaces/evento.interface';
+import { Evento, Invitado } from '../interfaces/evento.interface';
 import { ImageInfo, Regalo } from '../interfaces/regalo.interface';
 import { RegalosComponent } from '../regalos/regalos.component';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, FirebaseStorage, deleteObject } from "@angular/fire/storage";
@@ -243,18 +243,18 @@ export class EditarEventoComponent implements OnInit {
     this.eventoDoc.update(evento);
   }
 
-  remove(invitado: string): void {
+  remove(invitado: Invitado): void {
     this.eventoDoc.update({
-      invitados: arrayRemove(invitado) as any as string[]
+      invitados: arrayRemove(invitado) as Invitado as Invitado[]
     });
   }
 
   add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
+    const value:Invitado = {email: event.value, notificado: false}
     // Add our fruit
-    if (value) {
+    if (value.email != '') {
       this.eventoDoc.update({
-        invitados: arrayUnion(value) as any as string[]
+        invitados: arrayUnion(value) as Invitado as Invitado[]
       })
     }
 
