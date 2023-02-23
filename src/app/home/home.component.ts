@@ -13,9 +13,14 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 })
 export class HomeComponent implements OnInit {
   private misEventos: AngularFirestoreCollection<Evento> | undefined;
-  
+  private invitedEventos: AngularFirestoreCollection<Evento> | undefined;
+  private publicEvents: AngularFirestoreCollection<Evento> | undefined;
+
   eventos$: Observable<Evento[]> | undefined;
-  
+  invitedEventos$: Observable<Evento[]> | undefined;
+  publicEventos$: Observable<Evento[]> | undefined;
+
+
   user: any;
   constructor(
     private route: Router, 
@@ -33,6 +38,14 @@ export class HomeComponent implements OnInit {
     this.misEventos = this.firestore.collection<Evento>
     ('eventos', ref => ref.where('ownerId', '==', this.user.uid));
     this.eventos$ = this.misEventos.valueChanges();
+
+    this.invitedEventos = this.firestore.collection<Evento>
+    ('eventos', ref => ref.where('invitados.email', 'array-contains', this.user.email));
+    this.invitedEventos$ = this.invitedEventos.valueChanges();
+
+    this.publicEvents = this.firestore.collection<Evento>
+    ('eventos', ref => ref.where('private', '==', false));
+    this.publicEventos$ = this.publicEvents.valueChanges();
   }
 
   nuevoEvento = async () => {

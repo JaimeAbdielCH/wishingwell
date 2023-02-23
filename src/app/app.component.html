@@ -1,5 +1,4 @@
-<body class="mat-app-background">
-  <div class="container content">
+<div class="container content">
       <div *ngIf="showLoginButton; else showLogin">
           <div class="col-container">
               <router-outlet></router-outlet>
@@ -9,5 +8,4 @@
       <ng-template #showLogin>
           <app-login></app-login>
       </ng-template>
-  </div>
-</body>
+</div>

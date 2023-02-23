@@ -113,12 +113,12 @@ $my-warn: mat.define-palette($warn-palette, 500);
 }
 
 @font-face {
-font-family: "Primary";
+font-family: "Secondary";
 src: url(./assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf);
 }
 
 @font-face {
-font-family: "Secondary";
+font-family: "Primary";
 src: url(./assets/fonts/Cormorant_Unicase/CormorantUnicase-Regular.ttf);
 }
 
@@ -156,9 +156,9 @@ $my-theme: mat.define-light-theme((
 
 
 
-html, body { height: 100%; font-family: "Secondary" !important; }
+html, body { font-family: "Secondary" !important; }
 
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; }
 h6 {
   font-size: 20px !important;
     padding: 0 !important;
@@ -179,12 +179,8 @@ h1 {
   line-height: 96px !important;
 }
 
-.mat-typography h1, h2, h3, h4, h5, h6 {
-  font-family: "Primary" !important;
-}
-
 .mdc-button {
-  font-family: "Primary" !important;
+  font-family: "Secondary" !important;
 }
 
 h2 {
@@ -278,4 +274,15 @@ textarea.mat-input-element {
   line-height: 8vw !important;
   position: absolute;
   align-self: center;
+}
+
+.fechaCard {
+  position: absolute;
+    top: 1vh;
+    z-index: 1000;
+    left: 1vh;
+    background-color: #f6f6f9ab;
+    padding: 8.9px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px 0px #0000009c;
 }

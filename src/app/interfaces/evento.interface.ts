@@ -24,5 +24,6 @@ export interface Evento {
 
 export interface Invitado {
     email?: string,
-    notificado?: boolean
+    notificado?: boolean,
+    respuesta?: "Si" | "No"
 }

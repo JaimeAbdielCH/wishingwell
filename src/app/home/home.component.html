@@ -18,10 +18,10 @@
 }
 </style>
 <div class="row justify-content-center">
-<h1>Eventos</h1>
-<div class="col-md-12 col-lg-5" *ngIf="eventos$ | async; let eventos;">
+<div class="col-md-12 col-lg-4" *ngIf="eventos$ | async; let eventos;">
     <div *ngIf="eventos.length > 0;else noevent">
       <mat-card class="eventos-card" *ngFor="let evento of eventos">
+          <small class="fechaCard">{{evento.fecha}}</small>
           <img mat-card-image src="{{evento.imagenPortada}}" alt="evento-boda">
           <mat-card-actions class="actionholder">
             <button mat-button (click)="seeEventId(evento.id)">{{evento.nombre}}</button>
@@ -34,7 +34,33 @@
         <h2 style="color:rgb(83, 114, 114)">Presione el signo de más para crear un evento</h2>
       </div>
     </ng-template>
-</div>  
+</div>
+<ng-template *ngIf="invitedEventos$ | async; let invitedEvents;">
+<div class="col-md-12 col-lg-4">
+  <div *ngIf="invitedEvents.length > 0">
+    <mat-card class="eventos-card" *ngFor="let evento of invitedEvents">
+        <small class="fechaCard">{{evento.fecha}}</small>
+        <img mat-card-image src="{{evento.imagenPortada}}" alt="evento-boda">
+        <mat-card-actions class="actionholder">
+          <button mat-button (click)="seeEventId(evento.id)">{{evento.nombre}}</button>
+          <button mat-button><mat-icon>favorite</mat-icon></button>
+        </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+</ng-template>
+<div class="col-md-12 col-lg-4" *ngIf="publicEventos$ | async; let publicEventos;">
+  <div *ngIf="publicEventos.length > 0">
+    <mat-card class="eventos-card" *ngFor="let evento of publicEventos">
+        <small class="fechaCard">{{evento.fecha}}</small>
+        <img mat-card-image src="{{evento.imagenPortada}}" alt="evento-boda">
+        <mat-card-actions class="actionholder">
+          <button mat-button (click)="seeEventId(evento.id)">{{evento.nombre}}</button>
+          <button mat-button><mat-icon>favorite</mat-icon></button>
+        </mat-card-actions>
+    </mat-card>
+  </div>
+</div>    
 </div>
 <div class="example-button-container">
     <button mat-fab color="primary" (click)="nuevoEvento()">
