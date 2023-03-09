@@ -18,8 +18,10 @@ export interface Evento {
     informacionDePago?: string,
     fontFamily?: string,
     fontColor?: string,
+    fontSize?: number,
     defaultImage?: boolean,
-    mensajeInvitacion?: string
+    mensajeInvitacion?: string,
+    publicado: boolean,
 }
 
 export interface Invitado {

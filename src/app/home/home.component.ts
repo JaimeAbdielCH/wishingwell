@@ -61,7 +61,8 @@ export class HomeComponent implements OnInit {
       imagenesEventos: [],
       fecha: today.toLocaleString().split(',')[0],
       invitados: [],
-      regalos: []
+      regalos: [],
+      publicado: false,
     }
 
     this.misEventos?.doc(newDocId).set(nuevoEvento).then(() => {

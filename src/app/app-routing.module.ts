@@ -34,6 +34,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatSelectModule} from '@angular/material/select';
+import {MatSliderModule} from '@angular/material/slider';
 
 const routes: Routes = [ { title: 'Whishing Well', path: '', component: HomeComponent, pathMatch: 'full', canActivate: [AngularFireAuthGuard] },
 {path: 'user-info', component: UserInfoComponent, pathMatch: 'full', canActivate: [AngularFireAuthGuard]},
@@ -77,7 +78,8 @@ const routes: Routes = [ { title: 'Whishing Well', path: '', component: HomeComp
     MatSlideToggleModule,
     MatCheckboxModule,
     MatRadioModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSliderModule
   ],
   exports: [RouterModule],
   providers: [MatDatepickerModule]

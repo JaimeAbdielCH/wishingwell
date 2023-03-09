@@ -46,7 +46,8 @@ export class EventosComponent implements OnInit {
       imagenHeader: "",
       fecha: today.toLocaleString().split(',')[0],
       invitados: [],
-      regalos: []
+      regalos: [],
+      publicado: false
     }
 
     this.misEventos?.doc(id).set(nuevoEvento).then(() => {
