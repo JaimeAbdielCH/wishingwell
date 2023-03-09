@@ -164,6 +164,10 @@ h6 {
     padding: 0 !important;
     margin: 0 !important;
 }
+.full-width {
+  width: 100%;
+  margin-bottom: 1.75vh;
+}
 .col-container {
   padding-top:10vh;
   padding-bottom: 8vh;
@@ -171,12 +175,6 @@ h6 {
 .firebase-emulator-warning {
     // hide the warning banner as AngularFire doesn't support the 'disableWarnings' option
     display: none;
-}
-
-h1 {
-  text-align: center;
-  font-size: 110px !important;
-  line-height: 96px !important;
 }
 
 .mdc-button {
@@ -222,9 +220,15 @@ textarea.mat-input-element {
   margin-top: 1.5vh;
 }
 
+h1 {
+  text-align: center;
+  font-size: 110px !important;
+  line-height: 96px !important;
+}
+
 @media screen and (max-width: 480px) {
   h1 {
-    font-size: 100px !important;
+    font-size: 85px !important;
   }
 }
 

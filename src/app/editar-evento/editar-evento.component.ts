@@ -16,7 +16,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatInput } from '@angular/material/input';
+import { AppConstant } from '../Constants';
 
 @Component({
   selector: 'app-editar-evento',
@@ -28,6 +28,7 @@ import { MatInput } from '@angular/material/input';
 export class EditarEventoComponent implements OnInit {
   eventoDoc: AngularFirestoreDocument<Evento>;
   evento$: Observable<Evento>;
+  invitados$: Observable<Invitado[]>;
   fechaPicker = new FormControl(new Date('7/28/2022'));
   evento_indentifier = "";
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
@@ -46,7 +47,7 @@ export class EditarEventoComponent implements OnInit {
   storage: FirebaseStorage;
   defaultImages = false;
   public color:string;
-
+  
   
   minDate?:Date;
   selectedFiles?: FileList;
@@ -104,10 +105,13 @@ export class EditarEventoComponent implements OnInit {
     this.minDate = new Date()
     this.color = '';
     this.evento_indentifier = this.route.snapshot.paramMap.get('id')!;
-    this.eventoDoc = this.firestore.doc<Evento>('eventos/'+this.evento_indentifier);
+    this.eventoDoc = this.firestore.doc<Evento>(AppConstant.EVENTOS_COLLECTION+'/'+this.evento_indentifier);
+    
+    this.invitados$ = this.eventoDoc.collection<Invitado>(AppConstant.EVENTOS_INVITADOS_COLLECTION).valueChanges();
     this.evento$ = this.eventoDoc.valueChanges() as Observable<Evento>;
     
     this.evento$.subscribe((evento: Evento) => {
+        console.log(evento);
         this.nombreEvento = evento.nombre;
         this.descripcionEvento = evento.descripcion;
         this.tituloEvento = evento.tituloDescripcion;
@@ -226,6 +230,12 @@ export class EditarEventoComponent implements OnInit {
     });
   }
 
+  onPublicadoTogle(event: MatSlideToggleChange) {
+    this.eventoDoc.update({
+      publicado: event.checked
+    });
+  }
+
   onFontChoose(event: MatRadioChange) {
     this.eventoDoc.update({
       fontFamily: event.value
@@ -244,41 +254,36 @@ export class EditarEventoComponent implements OnInit {
   }
 
   remove(invitado: Invitado): void {
-    this.eventoDoc.update({
-      invitados: arrayRemove(invitado) as Invitado as Invitado[]
+    this.eventoDoc.collection(AppConstant.EVENTOS_INVITADOS_COLLECTION).doc(invitado.id).delete().then(() => {
+      console.log('collection deleted');
     });
   }
 
   add(event: MatChipInputEvent): void {
-    const value:Invitado = {email: event.value, notificado: false}
+    const id = this.firestore.createId();
+    const value:Invitado = {id: id, email: event.value, notificado: false}
     // Add our fruit
     if (value.email != '') {
-      this.eventoDoc.update({
-        invitados: arrayUnion(value) as Invitado as Invitado[]
-      })
+      this.eventoDoc.collection(AppConstant.EVENTOS_INVITADOS_COLLECTION).doc(id).set(value);
     }
 
     // Clear the input value
     event.chipInput!.clear();
   }
 
-  edit(invitado: string, event: MatChipEditedEvent) {
-    /* const value = event.value.trim();
+  edit(invitado: Invitado, event: MatChipEditedEvent) {
+    const value = event.value;
 
     // Remove fruit if it no longer has a name
     if (!value) {
       this.remove(invitado);
       return;
     }
-
-    // Edit existing fruit
-    const index = this.fruits.indexOf(invitado);
-    if (index >= 0) {
-      this.fruits[index].name = value;
-    } */
+    this.eventoDoc.collection(AppConstant.EVENTOS_INVITADOS_COLLECTION).doc(invitado.id).update(invitado);
   }
 
   addRegalo(evento: Evento) {
+    console.log(evento);
     const newRegalo: Regalo = {
       nombre: '',
       precio: 0,

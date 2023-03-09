@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, RouterStateSnapshot, Routes, TitleStrategy } from '@angular/router';
 import { EventosComponent } from './eventos/eventos.component';
 import { RegalosComponent } from './regalos/regalos.component';
-
+import { CurrencyMaskModule } from "ng2-currency-mask";
 
 import { EditarEventoComponent } from './editar-evento/editar-evento.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -79,7 +79,8 @@ const routes: Routes = [ { title: 'Whishing Well', path: '', component: HomeComp
     MatCheckboxModule,
     MatRadioModule,
     MatSelectModule,
-    MatSliderModule
+    MatSliderModule,
+    CurrencyMaskModule
   ],
   exports: [RouterModule],
   providers: [MatDatepickerModule]

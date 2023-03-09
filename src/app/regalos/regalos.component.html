@@ -1,18 +1,18 @@
+<div class="col-12">
 <h1 mat-dialog-title>Regalo</h1>
 <div mat-dialog-content>
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" class="full-width">
     <mat-label>Nombre</mat-label>
     <input matInput [(ngModel)]="data.regalo.nombre" required="true">
   </mat-form-field>
-  <mat-form-field appearance="fill" floatLabel="always">
+  <mat-form-field appearance="fill" floatLabel="always" class="full-width">
     <mat-label>Precio</mat-label>
-    <input matInput type="number" class="precio-right-align" placeholder="0" [(ngModel)]="data.regalo.precio" required="true">
-    <span matPrefix>$&nbsp;</span>
+    <input matInput currencyMask [options]="{ prefix: '$ ', thousands: ',', decimal: '.' }" type="string" class="precio-right-align" placeholder="0" [(ngModel)]="data.regalo.precio" required="true">
   </mat-form-field>
-  <mat-form-field>
+  <mat-form-field class="full-width">
     <div>
       <mat-toolbar>
-        <input matInput [value]="'Imagenes de regalo'" />
+        <input matInput [value]="'Seleccione imágenes'" />
       </mat-toolbar>
       <input
         type="file"
@@ -26,7 +26,7 @@
   <div>
     <img *ngFor='let preview of previews' [src]="preview" class="preview">
   </div>
-  <div *ngFor="let progressInfo of progressInfos">
+  <div *ngFor="let progressInfo of progressInfos" class="full-width">
     <span>{{ progressInfo.fileName }}</span>
     <mat-toolbar class="progress-bar">
       <mat-progress-bar
@@ -36,14 +36,14 @@
       <span class="progress">{{ progressInfo.value }}%</span>
     </mat-toolbar>
   </div>
-  <button
+  <button class="mb-3"
           mat-flat-button
           color="primary"
           [disabled]="!selectedFiles"
           (click)="uploadFiles()"
-        >
-          Subir
-        </button>
+        >Subir
+  </button>
+  <br />
   <mat-card class="list-card" *ngIf="data.regalo.imagenUrl?.length">
     <mat-card-header>
       <mat-card-title>Imagenes</mat-card-title>
@@ -88,4 +88,5 @@
     disabled="{{canSave}}"
     mat-button [mat-dialog-close]="data" 
     cdkFocusInitial>Salvar</button>
+</div>
 </div>

@@ -7,6 +7,15 @@ margin-left: auto;">
     <h1>Datos de evento</h1>
     <div class="groupContainer">
       <h2>Cabecera del Evento</h2>
+      <!--Evento Publicado?-->
+      <mat-slide-toggle
+          class="mb-3"
+          color="primary"
+          [checked]="evento.publicado"
+          (change)="onPublicadoTogle($event)">
+        ¿Evento Publicado?
+      </mat-slide-toggle>
+      <br />
       <!--Evento Privado?-->
       <mat-slide-toggle
           class="mb-3"
@@ -121,9 +130,9 @@ margin-left: auto;">
       <!--Lista de Invitados-->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Lista de email de los invitados</mat-label>
-      <mat-chip-grid #chipGrid aria-label="Invitation List">
+      <mat-chip-grid #chipGrid aria-label="Invitation List" *ngIf="invitados$ | async; let eventoInvitados">
         <mat-chip-row 
-         *ngFor="let invitado of evento.invitados" 
+         *ngFor="let invitado of eventoInvitados" 
          (removed)="remove(invitado)"
          [aria-description]="'presione enter para editar ' + invitado.email" 
          style="background-color: {{invitado.notificado ? 'rgb(219, 225, 255)' : 'rgb(251, 252, 253)'}};">

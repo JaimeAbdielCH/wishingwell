@@ -22,6 +22,7 @@ export class AppComponent {
     public readonly auth: AngularFireAuth, @Inject(PLATFORM_ID) platformId: object,
     appRef: ApplicationRef,
   ) {
+    console.log('DEVMODE?: '+isDevMode());
     if (isDevMode()) {
       appRef.isStable.pipe(
         debounceTime(200),
