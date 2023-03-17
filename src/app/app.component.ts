@@ -3,9 +3,12 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { EMPTY, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { trace, traceUntilFirst } from '@angular/fire/performance';
-import { Auth, authState, signInAnonymously, signOut, User, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import { Auth, authState, signInAnonymously, signOut, User, GoogleAuthProvider, signInWithPopup, getAuth, connectAuthEmulator } from '@angular/fire/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { isPlatformServer } from '@angular/common';
+import { environment } from 'src/environments/environment';
+import { connectFirestoreEmulator, getFirestore } from '@angular/fire/firestore';
+import { connectStorageEmulator, getStorage } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +34,15 @@ export class AppComponent {
         console.log('isStable', it);
       });
     }
+   if(isDevMode()){
+      console.log('testing env');
+      const thisAuth = getAuth();
+      connectAuthEmulator(thisAuth, 'http://localhost:5003');
+      const db = getFirestore();
+      connectFirestoreEmulator(db, 'localhost', 5002);
+      const storage = getStorage();
+      connectStorageEmulator(storage, "localhost", 9199); 
+    } 
     if (!isPlatformServer(platformId)) {
       this.userDisposable = this.auth.authState.pipe(
         traceUntilFirst('auth'),

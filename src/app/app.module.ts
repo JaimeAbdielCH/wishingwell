@@ -22,7 +22,7 @@ import {
 
 import { AngularFireDatabaseModule, USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/compat/database';
 import { AngularFirestoreModule, USE_EMULATOR as USE_FIRESTORE_EMULATOR, SETTINGS as FIRESTORE_SETTINGS } from '@angular/fire/compat/firestore';
-import { AngularFireStorageModule, USE_EMULATOR as USE_STORAGE_EMULATOR } from '@angular/fire/compat/storage';
+import { AngularFireStorageModule, BUCKET, USE_EMULATOR as USE_STORAGE_EMULATOR } from '@angular/fire/compat/storage';
 import { AngularFireAuthModule, PERSISTENCE, USE_DEVICE_LANGUAGE, USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/compat/auth';
 import { AngularFireMessagingModule, SERVICE_WORKER, VAPID_KEY } from '@angular/fire/compat/messaging';
 import { AngularFireFunctionsModule, USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/compat/functions';
@@ -90,11 +90,9 @@ export const persistenceEnabled = new Promise<boolean>(resolve => {
     { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true } },
     { provide: ANALYTICS_DEBUG_MODE, useValue: true },
     { provide: COLLECTION_ENABLED, useValue: true },
-    { provide: USE_AUTH_EMULATOR, useValue: environment.useEmulators ? ['http://localhost:5003'] : undefined },
-    { provide: USE_FIRESTORE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 5002] : undefined },
-    { provide: USE_STORAGE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9199] : undefined },
     { provide: USE_DEVICE_LANGUAGE, useValue: true },
     { provide: PERSISTENCE, useValue: 'session' },
+    { provide: BUCKET, useValue: 'gs://mis-eventos-77337.appspot.com/' },
     Title
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -1,7 +1,7 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { Evento, Invitado } from '../interfaces/evento.interface';
 import { Router } from '@angular/router';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreCollectionGroup } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AppConstant } from '../Constants';
@@ -14,11 +14,11 @@ import { AppConstant } from '../Constants';
 })
 export class HomeComponent implements OnInit {
   private misEventos: AngularFirestoreCollection<Evento> | undefined;
-  private invitedEventos: AngularFirestoreCollection<Evento> | undefined;
+  
   private publicEvents: AngularFirestoreCollection<Evento> | undefined;
 
   eventos$: Observable<Evento[]> | undefined;
-  invitedEventos$: Observable<Evento[]> | undefined;
+ 
   publicEventos$: Observable<Evento[]> | undefined;
 
 
@@ -39,10 +39,6 @@ export class HomeComponent implements OnInit {
     this.misEventos = this.firestore.collection<Evento>
     ('eventos', ref => ref.where('ownerId', '==', this.user.uid).where('publicado', '==', true));
     this.eventos$ = this.misEventos.valueChanges();
-
-    this.invitedEventos = this.firestore.collection<Evento>
-    (AppConstant.EVENTOS_COLLECTION+'/'+AppConstant.EVENTOS_INVITADOS_COLLECTION+'/', ref => ref.where('email', '==', this.user.email));
-    this.invitedEventos$ = this.invitedEventos.valueChanges();
 
     this.publicEvents = this.firestore.collection<Evento>
     ('eventos', ref => ref.where('private', '==', false));

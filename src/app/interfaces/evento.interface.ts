@@ -28,5 +28,6 @@ export interface Invitado {
     id?: string,
     email?: string,
     notificado?: boolean,
-    respuesta?: "Si" | "No"
+    respuesta?: "Si" | "No",
+    eventoId?: string
 }

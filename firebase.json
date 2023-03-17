@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/miseventos",
+    "public": "dist/wishingwell",
     "ignore": [
       "firebase.json",
       "**/.*",

@@ -254,14 +254,12 @@ export class EditarEventoComponent implements OnInit {
   }
 
   remove(invitado: Invitado): void {
-    this.eventoDoc.collection(AppConstant.EVENTOS_INVITADOS_COLLECTION).doc(invitado.id).delete().then(() => {
-      console.log('collection deleted');
-    });
+    this.eventoDoc.collection(AppConstant.EVENTOS_INVITADOS_COLLECTION).doc(invitado.id).delete();
   }
 
   add(event: MatChipInputEvent): void {
     const id = this.firestore.createId();
-    const value:Invitado = {id: id, email: event.value, notificado: false}
+    const value:Invitado = {id: id, email: event.value, notificado: false, eventoId: this.evento_indentifier}
     // Add our fruit
     if (value.email != '') {
       this.eventoDoc.collection(AppConstant.EVENTOS_INVITADOS_COLLECTION).doc(id).set(value);
